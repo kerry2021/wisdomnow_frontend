@@ -1,0 +1,38 @@
+'use client';
+
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.email) {
+      fetch('api/register_user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: session.user.name,
+          email: session.user.email,
+        }),
+      }).finally(() => router.replace('/dashboard'));
+    }
+  }, [status]);
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center">
+      {status !== 'authenticated' ? (
+        <button
+          className="rounded bg-blue-600 px-4 py-2 text-white"
+          onClick={() => signIn('google')}
+        >
+          Sign in with Google
+        </button>
+      ) : (
+        <p>Registering...</p>
+      )}
+    </main>
+  );
+}
