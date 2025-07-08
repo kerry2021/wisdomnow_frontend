@@ -8,19 +8,28 @@ export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.email) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: session.user.name,
-          email: session.user.email,
-        }),
-      }).finally(() => router.replace('/dashboard'));
-    }
-  }, [status]);
-
+useEffect(() => {
+  if (status === 'authenticated' && session?.user?.email) {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: session.user.name,
+        email: session.user.email,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Registration failed');
+        return res.json();
+      })
+      .then(() => {
+        router.replace('/dashboard');
+      })
+      .catch((err) => {
+        console.error('User registration error:', err);
+      });
+  }
+}, [status]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       {status !== 'authenticated' ? (
