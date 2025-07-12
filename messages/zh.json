@@ -14,5 +14,13 @@
     "signup": "注册",
     "backToLogin": "返回登录界面",
     "sendReset": "发送重置链接"
+  },
+  "Sidebar": {
+    "dashboard": "课程进度",
+    "discover": "探寻智慧",
+    "profile": "个人资料",
+    "about": "关于我们",
+    "login": "登录",
+    "logout": "退出登录"
   }
 }

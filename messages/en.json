@@ -14,5 +14,13 @@
     "signup": "Sign up",
     "backToLogin": "Back to login",
     "sendReset": "Send reset link"
+  },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "discover": "Discover",
+    "profile": "Profile",
+    "about": "About",
+    "login": "Login",
+    "logout": "Logout"   
   }
 }
