@@ -38,10 +38,19 @@ export default function LoginPage() {
   }, [status]);
 
   const handleEmailLogin = async () => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setError(error.message);
-    else router.replace('/dashboard');
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false
+    });
+
+    if (res?.ok) {
+      router.replace('/dashboard');
+    } else {
+      setError('Invalid credentials');
+    }
   };
+
 
   const handleSignup = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
@@ -80,7 +89,7 @@ export default function LoginPage() {
             {mode === 'login' && (
               <button
                 onClick={handleEmailLogin}
-                className="rounded bg-gray-800 text-white px-4 py-2"
+                className="rounded bg-gray-800 text-white px-4 py-2 hover:underline"
               >
                 {t('login')}
               </button>
@@ -88,7 +97,7 @@ export default function LoginPage() {
             {mode === 'signup' && (
               <button
                 onClick={handleSignup}
-                className="rounded bg-green-700 text-white px-4 py-2"
+                className="rounded bg-green-700 text-white px-4 py-2 hover:underline"
               >
                 {t('signup')}
               </button>
@@ -96,7 +105,7 @@ export default function LoginPage() {
             {mode === 'reset' && (
               <button
                 onClick={handlePasswordReset}
-                className="rounded bg-yellow-500 text-white px-4 py-2"
+                className="rounded bg-yellow-500 text-white px-4 py-2 hover:underline"
               >
                 {t('sendReset')}
               </button>
