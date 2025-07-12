@@ -1,47 +1,138 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
+import { supabase } from '@/lib/supabaseclient';
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-useEffect(() => {
-  if (status === 'authenticated' && session?.user?.email) {
-    console.log('User is authenticated:', session.user.email);
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: session.user.name,
-        email: session.user.email,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Registration failed');
-        return res.json();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [mode, setMode] = useState<'login' | 'signup' | 'reset'>('login');
+  const [message, setMessage] = useState('');
+
+  // Handles Google login
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.email) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: session.user.name,
+          email: session.user.email,
+        }),
       })
-      .then(() => {
-        router.replace('/dashboard');
-      })
-      .catch((err) => {
-        console.error('User registration error:', err);
-      });
-  }
-}, [status]);
+        .then((res) => {
+          if (!res.ok) throw new Error('Registration failed');
+          return res.json();
+        })
+        .then(() => router.replace('/dashboard'))
+        .catch((err) => console.error('User registration error:', err));
+    }
+  }, [status]);
+
+  const handleEmailLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) setError(error.message);
+    else router.replace('/dashboard');
+  };
+
+  const handleSignup = async () => {
+    const { error } = await supabase.auth.signUp({ email, password });
+
+    if (error) setError(error.message);
+    else setMessage('Check your email to confirm your account.');
+  };
+
+  const handlePasswordReset = async () => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+    if (error) setError(error.message);
+    else setMessage('Password reset email sent. Please check your inbox.');
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center space-y-6">
       {status !== 'authenticated' ? (
-        <button
-          className="rounded bg-blue-600 px-4 py-2 text-white"
-          onClick={() => signIn('google')}
-        >
-          Sign in with Google
-        </button>
+        <>
+          <div className="flex flex-col space-y-2 w-80">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border px-2 py-1 rounded"
+            />
+            {mode !== 'reset' && (
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border px-2 py-1 rounded"
+              />
+            )}
+            {mode === 'login' && (
+              <button
+                onClick={handleEmailLogin}
+                className="rounded bg-gray-800 text-white px-4 py-2"
+              >
+                Login
+              </button>
+            )}
+            {mode === 'signup' && (
+              <button
+                onClick={handleSignup}
+                className="rounded bg-green-700 text-white px-4 py-2"
+              >
+                Sign Up
+              </button>
+            )}
+            {mode === 'reset' && (
+              <button
+                onClick={handlePasswordReset}
+                className="rounded bg-yellow-500 text-white px-4 py-2"
+              >
+                Send Password Reset
+              </button>
+            )}
+            {error && <p className="text-red-500">{error}</p>}
+            {message && <p className="text-green-600">{message}</p>}
+          </div>
+
+          <div className="flex space-x-2 mt-2">
+            {mode !== 'login' && (
+              <button onClick={() => { setMode('login'); setError(''); setMessage(''); }}>
+                Back to Login
+              </button>
+            )}
+            {mode !== 'signup' && (
+              <button onClick={() => { setMode('signup'); setError(''); setMessage(''); }}>
+                Create Account
+              </button>
+            )}
+            {mode !== 'reset' && (
+              <button onClick={() => { setMode('reset'); setError(''); setMessage(''); }}>
+                Forgot Password?
+              </button>
+            )}
+          </div>
+
+          <p className="mt-4">or</p>
+          <button
+            className="rounded bg-blue-600 px-4 py-2 text-white"
+            onClick={() => signIn('google')}
+          >
+            Sign in with Google
+          </button>
+        </>
       ) : (
-        <p>Registering...</p>
+        <p>Processing...</p>
       )}
     </main>
   );
