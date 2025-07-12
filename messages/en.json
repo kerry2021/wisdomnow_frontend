@@ -1,0 +1,18 @@
+{
+  "login": {
+    "title": "Sign in or create an account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login with Email",
+    "or": "or",
+    "google": "Sign in with Google",
+    "error": "Invalid credentials",
+    "processing": "Processing...",
+    "login": "Login",
+    "createAccount": "Create account",
+    "forgotPassword": "Recover password",
+    "signup": "Sign up",
+    "backToLogin": "Back to login",
+    "sendReset": "Send reset link"
+  }
+}

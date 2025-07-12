@@ -1,0 +1,18 @@
+{
+  "login": {
+    "title": "登录或注册您的账户",
+    "email": "电子邮件",
+    "password": "密码",
+    "submit": "使用邮箱登录",
+    "or": "或者",
+    "google": "使用谷歌账户登录",
+    "error": "账号或密码错误",
+    "processing": "正在处理...",
+    "login": "登录",
+    "createAccount": "创建新账户",
+    "forgotPassword": "找回密码",
+    "signup": "注册",
+    "backToLogin": "返回登录界面",
+    "sendReset": "发送重置链接"
+  }
+}

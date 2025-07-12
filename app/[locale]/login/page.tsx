@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 import { supabase } from '@/lib/supabaseclient';
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const t = useTranslations('login');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +17,7 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'login' | 'signup' | 'reset'>('login');
   const [message, setMessage] = useState('');
 
-  // Handles Google login
+  // Handles Google login registration
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.email) {
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
@@ -37,33 +39,31 @@ export default function LoginPage() {
 
   const handleEmailLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-
     if (error) setError(error.message);
     else router.replace('/dashboard');
   };
 
   const handleSignup = async () => {
     const { error } = await supabase.auth.signUp({ email, password });
-
     if (error) setError(error.message);
-    else setMessage('Check your email to confirm your account.');
+    else setMessage(t('checkEmailConfirmation'));
   };
 
   const handlePasswordReset = async () => {
     const { error } = await supabase.auth.resetPasswordForEmail(email);
-
     if (error) setError(error.message);
-    else setMessage('Password reset email sent. Please check your inbox.');
+    else setMessage(t('resetEmailSent'));
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center space-y-6">
       {status !== 'authenticated' ? (
         <>
+          <h1 className="text-xl font-bold">{t('title')}</h1>
           <div className="flex flex-col space-y-2 w-80">
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t('email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="border px-2 py-1 rounded"
@@ -71,7 +71,7 @@ export default function LoginPage() {
             {mode !== 'reset' && (
               <input
                 type="password"
-                placeholder="Password"
+                placeholder={t('password')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="border px-2 py-1 rounded"
@@ -82,7 +82,7 @@ export default function LoginPage() {
                 onClick={handleEmailLogin}
                 className="rounded bg-gray-800 text-white px-4 py-2"
               >
-                Login
+                {t('login')}
               </button>
             )}
             {mode === 'signup' && (
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 onClick={handleSignup}
                 className="rounded bg-green-700 text-white px-4 py-2"
               >
-                Sign Up
+                {t('signup')}
               </button>
             )}
             {mode === 'reset' && (
@@ -98,7 +98,7 @@ export default function LoginPage() {
                 onClick={handlePasswordReset}
                 className="rounded bg-yellow-500 text-white px-4 py-2"
               >
-                Send Password Reset
+                {t('sendReset')}
               </button>
             )}
             {error && <p className="text-red-500">{error}</p>}
@@ -107,32 +107,34 @@ export default function LoginPage() {
 
           <div className="flex space-x-2 mt-2">
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setMessage(''); }}>
-                Back to Login
+              <button onClick={() => { setMode('login'); setError(''); setMessage(''); }} className="hover:underline">
+                {t('backToLogin')}
               </button>
             )}
+          
             {mode !== 'signup' && (
-              <button onClick={() => { setMode('signup'); setError(''); setMessage(''); }}>
-                Create Account
+              <button onClick={() => { setMode('signup'); setError(''); setMessage(''); }} className="hover:underline">
+                {t('createAccount')}
               </button>
             )}
+            
             {mode !== 'reset' && (
-              <button onClick={() => { setMode('reset'); setError(''); setMessage(''); }}>
-                Forgot Password?
+              <button onClick={() => { setMode('reset'); setError(''); setMessage(''); }} className="hover:underline">
+                {t('forgotPassword')}
               </button>
             )}
           </div>
 
-          <p className="mt-4">or</p>
+          <p className="mt-4">{t('or')}</p>
           <button
             className="rounded bg-blue-600 px-4 py-2 text-white"
             onClick={() => signIn('google')}
           >
-            Sign in with Google
+            {t('google')}
           </button>
         </>
       ) : (
-        <p>Processing...</p>
+        <p>{t('processing')}</p>
       )}
     </main>
   );
