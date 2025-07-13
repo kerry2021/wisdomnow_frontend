@@ -19,6 +19,8 @@
   "Sidebar": {
     "dashboard": "Dashboard",
     "discover": "Discover",
+    "instructorDashboard": "Dashboard",
+    "manageStudents": "Students",
     "profile": "Profile",
     "about": "About",
     "login": "Login",

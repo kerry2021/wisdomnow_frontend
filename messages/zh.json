@@ -19,6 +19,8 @@
   "Sidebar": {
     "dashboard": "课程进度",
     "discover": "探寻智慧",
+    "instructorDashboard": "课程总览（教师）",
+    "manageStudents": "学生管理",
     "profile": "个人资料",
     "about": "关于我们",
     "login": "登录",
