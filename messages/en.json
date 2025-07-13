@@ -13,7 +13,8 @@
     "forgotPassword": "Recover password",
     "signup": "Sign up",
     "backToLogin": "Back to login",
-    "sendReset": "Send reset link"
+    "sendReset": "Send reset link",
+    "checkEmailConfirmation": "Registered!"
   },
   "Sidebar": {
     "dashboard": "Dashboard",
