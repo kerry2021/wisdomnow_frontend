@@ -60,6 +60,15 @@ export const authOptions: NextAuthOptions = {
       } else if (user) {
         token.email = user.email;
         token.name = user.name;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user_profile?email=${token.email}`, {        
+          method: "GET",
+        });
+        const data: UserProfileResponse = await res.json();
+        if (data?.profile?.access_type) {
+          token.access_type = data.profile.access_type;
+        } else {
+          token.access_type = "student"; // Default access type
+        }
       }
       return token;
     },
@@ -67,15 +76,7 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.email = token.email;
         session.user.name = token.name;
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user_profile?email=${token.email}`, {        
-          method: "GET",
-        });
-        const data: UserProfileResponse = await res.json();
-        if (data?.profile?.access_type) {
-          session.user.access_type = data.profile.access_type;
-        } else {
-          session.user.access_type = "student"; // Default access type
-        }
+        session.user.access_type = token.access_type;
       }
       console.log("Session created:", session.user);
       return session;
