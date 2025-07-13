@@ -3,6 +3,17 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 import { supabase } from "@/lib/supabaseclient";
+import { JWT } from "next-auth/jwt";
+
+type UserProfileResponse = {
+  status: 'ok';
+  profile: {
+    name: string;
+    email: string;
+    access_type: string;
+  };
+};
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -42,7 +53,7 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   callbacks: {
-    async jwt({ token, account, profile, user }) {
+    async jwt({ token, account, profile, user }): Promise<JWT> {
       if (account?.provider === "google" && profile) {
         token.email = profile.email;
         token.name = profile.name;
@@ -56,7 +67,17 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.email = token.email;
         session.user.name = token.name;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user_profile?email=${token.email}`, {        
+          method: "GET",
+        });
+        const data: UserProfileResponse = await res.json();
+        if (data?.profile?.access_type) {
+          session.user.access_type = data.profile.access_type;
+        } else {
+          session.user.access_type = "student"; // Default access type
+        }
       }
+      console.log("Session created:", session.user);
       return session;
     },
   },
