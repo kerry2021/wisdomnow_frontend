@@ -25,5 +25,11 @@
     "about": "关于我们",
     "login": "登录",
     "logout": "退出登录"
+  },
+    "NotFound": {
+    "title": "404错误",
+    "description": "您访问的页面不存在。",
+    "backHome": "返回首页",
+    "path": "您的路径：{pathname}"
   }
 }

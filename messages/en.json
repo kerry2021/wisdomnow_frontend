@@ -25,5 +25,11 @@
     "about": "About",
     "login": "Login",
     "logout": "Logout"   
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist.",
+    "backHome": "Go back to home",
+    "path": "You tried: {pathname}"
   }
 }
