@@ -32,7 +32,7 @@ export default function CoursesPage() {
 
   const handleDelete = async (courseId: number | undefined) => {
     console.log('Deleting course with ID:', courseId);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/courses/`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/courses`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
