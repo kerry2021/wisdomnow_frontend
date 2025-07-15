@@ -6,6 +6,7 @@ import CourseForm from '@/components/CourseForm';
 import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 interface Session {
   id: number;
@@ -38,7 +39,13 @@ export default function CoursesPage() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ courseId }),
-    });
+    })
+    //refresh the page after deletion
+    .then((res) => {      
+        console.log('Course deleted successfully');  
+        setCourses((prev) => prev.filter(course => course.id !== courseId));
+            
+    })   
   }
   
   const handleCourseUpdate = async (form: {
