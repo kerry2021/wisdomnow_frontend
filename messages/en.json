@@ -20,6 +20,7 @@
     "dashboard": "Dashboard",
     "discover": "Discover",
     "instructorDashboard": "Dashboard",
+    "manageCourses": "Courses",
     "manageStudents": "Students",
     "profile": "Profile",
     "about": "About",
@@ -31,5 +32,21 @@
     "description": "The page you're looking for doesn't exist.",
     "backHome": "Go back to home",
     "path": "You tried: {pathname}"
+  },
+  "InstructorCourses":{
+    "previous": "Previous",
+    "next": "Next",
+    "allCourses": "All Courses",
+    "page": "Page",
+    "createNewCourse": "Create New Course"
+  },
+  "CourseForm": {
+    "sessions": "Sessions",
+    "addSessions": "Add Session",
+    "editCourse": "Edit Course",
+    "delete": "Delete",
+    "back": "Back",
+    "instuctor": "Instructor"
   }
+
 }
