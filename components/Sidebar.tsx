@@ -22,6 +22,7 @@ const navItemsByRole: Record<Role, NavItem[]> = {
   instructor: [
     { name: 'instructorDashboard', href: '/instructor/dashboard' },
     { name: 'manageStudents', href: '/instructor/students' },
+    { name: 'manageCourses', href: '/courses/instructorView' },
   ],
   visitor: [
     { name: 'login', href: '/login' },
