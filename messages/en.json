@@ -46,7 +46,8 @@
     "editCourse": "Edit Course",
     "delete": "Delete",
     "back": "Back",
-    "instuctor": "Instructor"
+    "instuctor": "Instructor",
+    "deleteCourse": "Delete Course"
   }
 
 }

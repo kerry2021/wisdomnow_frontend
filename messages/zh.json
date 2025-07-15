@@ -46,6 +46,7 @@
     "editCourse": "编辑课程",
     "delete": "删除课程",
     "back": "返回",
-    "instuctor": "带课师父"
+    "instuctor": "带课师父",
+    "deleteCourse": "删除课程"
   }
 }
