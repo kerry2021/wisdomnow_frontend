@@ -20,7 +20,7 @@ export default function LoginPage() {
   // Handles Google login registration
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.email) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register_user`, {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
