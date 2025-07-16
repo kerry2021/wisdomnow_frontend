@@ -48,6 +48,13 @@
     "back": "Back",
     "instuctor": "Instructor",
     "deleteCourse": "Delete Course"
+  },
+  "UserProfile": {
+    "changePhoto": "Change Photo",
+    "saveChanges": "Save",
+    "cancel": "Cancel",
+    "instructor": "Instructor",
+    "student": "Student"
   }
 
 }

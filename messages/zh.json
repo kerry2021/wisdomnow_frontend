@@ -48,5 +48,12 @@
     "back": "返回",
     "instuctor": "带课师父",
     "deleteCourse": "删除课程"
+  },
+  "UserProfile": {
+    "changePhoto": "更换头像",
+    "saveChanges": "保存",
+    "cancel": "取消",
+    "instructor": "师父",
+    "student": "修士"
   }
 }
