@@ -11,8 +11,8 @@ import { useRouter } from 'next/navigation';
 interface Session {
   id: number;
   start_date: string;
-  enddate: string;
-  instructor: string;
+  end_date: string;
+  instructors: string[];
 }
 
 interface Course {
@@ -137,8 +137,8 @@ export default function CoursesPage() {
           initialSessions={course.sessions.map(s => ({
             id: s.id,
             startDate: s.start_date,
-            endDate: s.enddate,
-            instructor: s.instructor
+            endDate: s.end_date,
+            instructors: s.instructors || [], // Ensure instructors is an array
           }))}
           isDisplayOnly
           courseId={course.id}

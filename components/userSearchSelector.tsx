@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface User {
   user_id: string;
@@ -19,12 +19,15 @@ export default function UserSearchSelector({ allUsers, onSelect, initialSelected
   const [query, setQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>(initialSelected);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (query === '') {
-      setFilteredUsers(allUsers.filter(user =>
-        !selectedUsers.some(selected => selected.user_id === user.user_id)
-      ));
+      setFilteredUsers(
+        allUsers.filter(user => !selectedUsers.some(selected => selected.user_id === user.user_id))
+      );
     } else {
       const lower = query.toLowerCase();
       setFilteredUsers(
@@ -54,8 +57,19 @@ export default function UserSearchSelector({ allUsers, onSelect, initialSelected
     onSelect(updated);
   };
 
+  // Close dropdown if clicking outside component
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-md" ref={containerRef}>
       <div className="flex flex-wrap gap-2 px-4 py-2 border border-gray-300 rounded shadow-sm bg-gray-50">
         {selectedUsers.map(user => (
           <div key={user.user_id} className="relative flex items-center bg-white border rounded px-2 py-1 pr-6">
@@ -76,10 +90,11 @@ export default function UserSearchSelector({ allUsers, onSelect, initialSelected
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a user..."
           className="flex-grow min-w-[100px] bg-gray-50 outline-none"
+          onFocus={() => setIsFocused(true)}
         />
       </div>
 
-      {filteredUsers.length > 0 && (
+      {isFocused && filteredUsers.length > 0 && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded shadow max-h-60 overflow-y-auto">
           {filteredUsers.map(user => (
             <li

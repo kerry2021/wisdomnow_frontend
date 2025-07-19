@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 interface Session {
   startDate: string;
   endDate: string;
-  instructor: string;
+  instructors: string[];
   id?: number;
 }
 
@@ -116,14 +116,14 @@ export default function CourseForm({
                         {session.startDate} to {session.endDate}
                       </Link>
                       <span className="bg-gray-100 border border-gray-300 px-2 py-0.5 rounded text-xs text-gray-800 font-semibold">
-                        {t('instuctor')}: {session.instructor}
+                        {t('instuctor')}: {session.instructors.join(', ')}
                       </span>
                     </div>
                   ))}
               </div>
               <div className="flex gap-2 mt-2">
                 {courseId && (
-                  <Link href={`/courses/${courseId}/sessions/new`}>
+                  <Link href={`/sessions/new?courseId=${courseId}&courseName=${courseName}`}>
                     <Button variant="outline">{t('addSessions')}</Button>
                   </Link>
                 )}
