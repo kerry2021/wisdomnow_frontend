@@ -2,8 +2,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import UserSearchSelector from '@/components/userSearchSelector';
+
 
 interface User {
   user_id: string;
@@ -22,9 +23,11 @@ export default function CreateSessionPage() {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [periodDays, setPeriodDays] = useState<number>(7); 
+  const [periodLabel, setPeriodLabel] = useState<string>('Week');
+  const router = useRouter();
 
   useEffect(() => {
-    // Fetch all users for selection
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?access_type=all`)
       .then(res => res.json())
       .then(data => {
@@ -35,7 +38,6 @@ export default function CreateSessionPage() {
   }, []);
 
   const handleSubmit = () => {
-    // Example submission logic, you can replace with real API call
     const instructorIds = selectedUsers.map(user => user.user_id);
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions`, {
       method: 'POST',
@@ -46,14 +48,16 @@ export default function CreateSessionPage() {
         courseId,
         startDate,
         endDate,
-        instructorIds: instructorIds,
+        instructorIds,
+        periodDays, 
+        periodLabel,
       }),
     })
       .then(res => res.json())
       .then(data => {
         console.log('Session created:', data);
-        // Optionally redirect or show success message
-      })
+        router.replace(`/sessions/edit?sessionId=${data.session_id}&courseName=${courseName}`);
+      });
   };
 
   return (
@@ -81,6 +85,30 @@ export default function CreateSessionPage() {
       </div>
 
       <div>
+        <label className="block mb-1 text-sm font-medium text-gray-700">
+          Module Duration (in days)
+        </label>
+        <input
+          type="number"
+          min={1}
+          value={periodDays}
+          onChange={(e) => setPeriodDays(Number(e.target.value))}
+          className="w-full border px-3 py-2 rounded"
+        />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-medium text-gray-700">Label for each period:</label>
+        <input
+          type="text"
+          value={periodLabel}
+          onChange={(e) => setPeriodLabel(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
+          placeholder="Week, Module, etc."
+        />
+      </div>
+
+      <div>
         <label className="block mb-2 text-sm font-medium text-gray-700">Assign Instructors</label>
         <UserSearchSelector
           allUsers={allUsers}
@@ -97,7 +125,6 @@ export default function CreateSessionPage() {
       >
         Create
       </button>
-
     </div>
   );
 }

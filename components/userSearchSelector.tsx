@@ -43,6 +43,12 @@ export default function UserSearchSelector({ allUsers, onSelect, initialSelected
     }
   }, [query, allUsers, selectedUsers]);
 
+  useEffect(() => {
+  if (initialSelected.length && selectedUsers.length === 0) {
+    setSelectedUsers(initialSelected);
+  }
+}, [initialSelected]);
+
   const handleRemoveUser = (userId: string) => {
     const updated = selectedUsers.filter(u => u.user_id !== userId);
     setSelectedUsers(updated);

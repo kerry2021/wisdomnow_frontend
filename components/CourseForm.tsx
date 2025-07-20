@@ -112,7 +112,7 @@ export default function CourseForm({
                   .sort((a, b) => a.startDate.localeCompare(b.startDate))
                   .map((session, i) => (
                     <div key={i} className="text-sm font-medium flex items-center gap-2">
-                      <Link href={`/courses/${courseId}/sessions/${session.id}`} className="text-blue-700 hover:underline">
+                      <Link href={`/sessions/edit?sessionId=${session.id}&courseName=${courseName}`} className="text-blue-700 hover:underline">
                         {session.startDate} to {session.endDate}
                       </Link>
                       <span className="bg-gray-100 border border-gray-300 px-2 py-0.5 rounded text-xs text-gray-800 font-semibold">
@@ -123,7 +123,7 @@ export default function CourseForm({
               </div>
               <div className="flex gap-2 mt-2">
                 {courseId && (
-                  <Link href={`/sessions/new?courseId=${courseId}&courseName=${courseName}`}>
+                  <Link href={`/sessions/create?courseId=${courseId}&courseName=${courseName}`}>
                     <Button variant="outline">{t('addSessions')}</Button>
                   </Link>
                 )}
