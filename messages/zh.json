@@ -55,5 +55,22 @@
     "cancel": "取消",
     "instructor": "师父",
     "student": "修士"
+  },
+  "session": {    
+    "current_week": "本周",
+    "save": "保存",
+    "delete": "删除本期课程",
+    "deleted": "本期课程已成功删除！",
+    "delete_failed": "删除本期课程失败。",
+    "delete_confirm": "您确定要删除本期课程吗？",
+    "delete_double_confirm": "此操作无法撤销，您确定吗？",
+    "create_title_for": "创建新一期课程： ",
+    "start_date": "开课日期",
+    "end_date": "结课日期",
+    "module_duration": "每个学习周期的持续时间（天）",
+    "period_label": "学习周期名称（例如：周、月等）",
+    "period_label_placeholder": "周、月等",
+    "assign_instructors": "请选择带课师父",
+    "create_button": "创建新一期课程"
   }
 }

@@ -55,6 +55,24 @@
     "cancel": "Cancel",
     "instructor": "Instructor",
     "student": "Student"
+  },
+  "session": {    
+    "current_week": "Current Week",
+    "save": "Save",
+    "delete": "Delete Session",
+    "deleted": "Session deleted successfully!",
+    "delete_failed": "Failed to delete session.",
+    "delete_confirm": "Are you sure you want to delete this session?",
+    "delete_double_confirm": "This action cannot be undone. Are you sure?",
+    "create_title_for": "Create Session for",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "module_duration": "Duration of each delivery period",
+    "period_label": "Name of the delivery period",
+    "period_label_placeholder": "Week, Month, etc.",
+    "assign_instructors": "Assign Instructors",
+    "create_button": "Create Session"
+
   }
 
 }
