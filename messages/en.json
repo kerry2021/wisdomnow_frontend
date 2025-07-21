@@ -64,6 +64,7 @@
     "delete_failed": "Failed to delete session.",
     "delete_confirm": "Are you sure you want to delete this session?",
     "delete_double_confirm": "This action cannot be undone. Are you sure?",
+    "instructors": "Instructors",
     "create_title_for": "Create Session for",
     "start_date": "Start Date",
     "end_date": "End Date",
@@ -71,7 +72,8 @@
     "period_label": "Name of the delivery period",
     "period_label_placeholder": "Week, Month, etc.",
     "assign_instructors": "Assign Instructors",
-    "create_button": "Create Session"
+    "create_button": "Create Session",
+    "language": "Language"
 
   }
 

@@ -37,6 +37,7 @@ export default function CreateSessionPage() {
   const [endDate, setEndDate] = useState('');
   const [periodDays, setPeriodDays] = useState<number>(7); 
   const [periodLabel, setPeriodLabel] = useState<string>('Week');
+  const [language, setLanguage] = useState<string>('en');
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?access_type=all`)
@@ -62,6 +63,7 @@ export default function CreateSessionPage() {
         instructorIds,
         periodDays, 
         periodLabel,
+        language,
       }),
     })
       .then(res => res.json())
@@ -117,6 +119,18 @@ export default function CreateSessionPage() {
           className="w-full border px-3 py-2 rounded"
           placeholder={t('period_label_placeholder')}
         />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-sm font-medium text-gray-700">{t('language')}</label>
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
+        >
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
       </div>
 
       <div>
