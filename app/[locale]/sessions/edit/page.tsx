@@ -138,7 +138,7 @@ export default function EditSessionPage() {
           return (
             <div
               key={period.id}
-              onClick={() => router.push(`/session_periods/edit?period_id=${period.id}`)}
+              onClick={() => router.push(`/session_periods/edit?period_id=${period.id}&courseName=${courseName}`)}
               className={`cursor-pointer flex justify-between items-center border rounded p-4 shadow transition relative
                 ${isCurrent
                   ? 'border-2 border-black bg-white'
