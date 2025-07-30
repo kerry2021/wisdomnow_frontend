@@ -33,12 +33,16 @@
     "backHome": "Go back to home",
     "path": "You tried: {pathname}"
   },
-  "InstructorCourses":{
+  "Courses":{
     "previous": "Previous",
     "next": "Next",
     "allCourses": "All Courses",
     "page": "Page",
-    "createNewCourse": "Create New Course"
+    "createNewCourse": "Create New Course",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "language": "Language",
+    "filter": "Filter"
   },
   "CourseForm": {
     "sessions": "Sessions",
@@ -47,7 +51,8 @@
     "delete": "Delete",
     "back": "Back",
     "instuctor": "Instructor",
-    "deleteCourse": "Delete Course"
+    "deleteCourse": "Delete Course",
+    "enroll": "Enroll"
   },
   "UserProfile": {
     "changePhoto": "Change Photo",

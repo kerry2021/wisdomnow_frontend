@@ -33,12 +33,16 @@
     "backHome": "返回首页",
     "path": "您的路径：{pathname}"
   },
-  "InstructorCourses": {
+  "Courses": {
     "previous": "上一页",
     "next": "下一页",
     "allCourses": "所有课程",
     "page": "",
-    "createNewCourse": "创建新课程"
+    "createNewCourse": "创建新课程",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "language": "语言",
+    "filter": "搜索"
   },
   "CourseForm": {
     "sessions": "课程排期",
@@ -47,7 +51,8 @@
     "delete": "删除课程",
     "back": "返回",
     "instuctor": "带课师父",
-    "deleteCourse": "删除课程"
+    "deleteCourse": "删除课程",
+    "enroll": "报名"
   },
   "UserProfile": {
     "changePhoto": "更换头像",

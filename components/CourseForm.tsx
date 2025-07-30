@@ -30,6 +30,8 @@ interface CourseFormProps {
   isEdit?: boolean;
   isDisplayOnly?: boolean;
   courseId?: number;
+  showEnrollButtons?: boolean; // New prop
+  onEnroll?: (sessionId: number | undefined) => void; // Optional callback
 }
 
 export default function CourseForm({
@@ -42,6 +44,8 @@ export default function CourseForm({
   isEdit = false,
   isDisplayOnly = false,
   courseId,
+  showEnrollButtons = false,
+  onEnroll,
 }: CourseFormProps) {
   const [courseName, setCourseName] = useState(initialCourseName);
   const [description, setDescription] = useState(initialDescription);
@@ -72,12 +76,12 @@ export default function CourseForm({
     }
   };
 
-  const handleSubmit = () => {    
+  const handleSubmit = () => {
     const formData = {
       courseId: courseId || null,
       courseName,
       description,
-      image: image || null, // Use null if no image is selected
+      image: image || null,
     }
     onSubmit(formData);
   };
@@ -118,17 +122,24 @@ export default function CourseForm({
                       <span className="bg-gray-100 border border-gray-300 px-2 py-0.5 rounded text-xs text-gray-800 font-semibold">
                         {t('instuctor')}: {session.instructors.join(', ')}
                       </span>
+                      {showEnrollButtons && (
+                        <Button size="sm" onClick={() => onEnroll?.(session.id)}>
+                          {t('enroll')}
+                        </Button>
+                      )}
                     </div>
                   ))}
               </div>
-              <div className="flex gap-2 mt-2">
-                {courseId && (
-                  <Link href={`/sessions/create?courseId=${courseId}&courseName=${courseName}`}>
-                    <Button variant="outline">{t('addSessions')}</Button>
-                  </Link>
-                )}
-                <Button onClick={() => setMode('edit')}>{t('editCourse')}</Button>
-              </div>
+              {!showEnrollButtons && (
+                <div className="flex gap-2 mt-2">
+                  {courseId && (
+                    <Link href={`/sessions/create?courseId=${courseId}&courseName=${courseName}`}>
+                      <Button variant="outline">{t('addSessions')}</Button>
+                    </Link>
+                  )}
+                  <Button onClick={() => setMode('edit')}>{t('editCourse')}</Button>
+                </div>
+              )}
             </>
           ) : (
             <>

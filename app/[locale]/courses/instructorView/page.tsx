@@ -28,7 +28,7 @@ export default function CoursesPage() {
   const [page, setPage] = useState(1);
   const { data: session } = useSession();
   const limit = 10;
-  const t = useTranslations('InstructorCourses');
+  const t = useTranslations('Courses');
   const [totalPages, setTotalPages] = useState(0);
 
   const handleDelete = async (courseId: number | undefined) => {
@@ -144,6 +144,7 @@ export default function CoursesPage() {
           courseId={course.id}
           onSubmit={handleCourseUpdate}
           onDelete={handleDelete}
+          showEnrollButtons={false}
         />
       ))}
       <div className="flex justify-between">
