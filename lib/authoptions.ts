@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.name = token.name;
         session.user.access_type = token.access_type;
-        session.user.user_id = token.id;
+        session.user.user_id = token.user_id;
       }
       console.log("Session created:", session.user);
       return session;
