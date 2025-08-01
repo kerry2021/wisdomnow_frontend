@@ -31,7 +31,7 @@ interface CourseFormProps {
   isDisplayOnly?: boolean;
   courseId?: number;
   showEnrollButtons?: boolean; // New prop
-  onEnroll?: (sessionId: number | undefined) => void; // Optional callback
+  onEnroll?: (sessionId: number) => Promise<void>;
 }
 
 export default function CourseForm({
@@ -123,7 +123,7 @@ export default function CourseForm({
                         {t('instuctor')}: {session.instructors.join(', ')}
                       </span>
                       {showEnrollButtons && (
-                        <Button size="sm" onClick={() => onEnroll?.(session.id)}>
+                        <Button size="sm" onClick={() => onEnroll?.(session.id? session.id : 0)} className="ml-auto">
                           {t('enroll')}
                         </Button>
                       )}

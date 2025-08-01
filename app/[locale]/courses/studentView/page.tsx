@@ -90,6 +90,25 @@ export default function StudentCoursesPage() {
     setTriggerFetch(prev => !prev);
   };
 
+  const handleEnroll = async (sessionId: number) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session_registrations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },        
+        body: JSON.stringify({ session_id: sessionId, user_id: session?.user?.user_id, role: "applicant" }),
+      });
+
+      if (!res.ok) throw new Error('Failed to register');
+
+      console.log(`Successfully enrolled in session ${sessionId}`);
+      // Optionally, display a toast or update UI
+    } catch (err) {
+      console.error('Enrollment error:', err);
+    }
+  };
+
   if (!session) {
     return (
       <div className="text-center">
@@ -145,9 +164,7 @@ export default function StudentCoursesPage() {
           onSubmit={() => {}}
           onDelete={() => {}}
           showEnrollButtons
-          onEnroll={(sessionId) => {
-            console.log(`Enroll clicked for session ${sessionId}`);
-          }}
+          onEnroll={handleEnroll}
         />
       ))}
 

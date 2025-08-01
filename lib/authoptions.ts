@@ -8,6 +8,7 @@ import { JWT } from "next-auth/jwt";
 type UserProfileResponse = {
   status: 'ok';
   profile: {
+    user_id: string;
     name: string;
     email: string;
     access_type: string;
@@ -64,6 +65,7 @@ export const authOptions: NextAuthOptions = {
           method: "GET",
         });
         const data: UserProfileResponse = await res.json();
+        token.id = data.profile.user_id;
         if (data?.profile?.access_type) {
           token.access_type = data.profile.access_type;
         } else {
@@ -77,6 +79,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.name = token.name;
         session.user.access_type = token.access_type;
+        session.user.user_id = token.id;
       }
       console.log("Session created:", session.user);
       return session;
