@@ -1,11 +1,10 @@
-// app/session/edit/page.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import UserSearchSelector from '@/components/userSearchSelector';
+import { CheckCircle, XCircle } from "lucide-react";
 
 interface User {
   user_id: string;
@@ -20,7 +19,7 @@ interface SessionPeriod {
   end_date: string;
 }
 
-export default function EditSessionPage() {
+export default function ViewSessionPage() {
   const { data: session } = useSession();
   const t = useTranslations('session');
   const searchParams = useSearchParams();
@@ -30,13 +29,14 @@ export default function EditSessionPage() {
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [sessionPeriods, setSessionPeriods] = useState<SessionPeriod[]>([]);
   const [periodLabel, setPeriodLabel] = useState('');
+  const [applicants, setApplicants] = useState<User[]>([]);
+  const [students, setStudents] = useState<User[]>([]);
 
   useEffect(() => {
-    if (!session || session.user.access_type !== 'instructor') {
+    if (!session || session.user?.access_type != 'instructor') {
       router.push('/unauthorized');
       return;
     }
@@ -59,52 +59,122 @@ export default function EditSessionPage() {
   }, [sessionId]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?access_type=all`)
-      .then(res => res.json())
-      .then(data => setAllUsers(data || []))
-      .catch(err => console.error('Failed to fetch users', err));
-  }, []);
+    if (!sessionId) return;
 
-  const handleSubmit = () => {
-    const instructorIds = selectedUsers.map(user => user.user_id);
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        instructorIds
-      })
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Session updated:', data);
-      });
-  };
-
-  const handleDelete = () => {
-    const confirmed = window.confirm(t('delete_confirm'));
-    if (!confirmed) return;
-    const doubleCheck = window.confirm(t('delete_double_confirm'));
-    if (!doubleCheck) return;
-
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions?sessionId=${sessionId}`, {
-      method: 'DELETE'
-    })
-      .then(res => {
-        if (res.ok) {
-          alert(t('deleted'));
-          router.push('/courses/instructorView');
+    const fetchUsers = async (role: string, setter: (users: User[]) => void) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session_registrations?session_id=${sessionId}&role=${role}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setter(data);
         } else {
-          throw new Error('Delete failed');
+          console.error(`Failed to fetch ${role}s`);
         }
-      })
-      .catch(err => {
-        console.error('Failed to delete session', err);
-        alert(t('delete_failed'));
-      });
-  };
+      } catch (error) {
+        console.error(`Error fetching ${role}s:`, error);
+      }
+    };
+
+    fetchUsers('applicant', setApplicants);
+    fetchUsers('student', setStudents);
+  }, [sessionId]);
 
   const today = new Date();
+
+  const handleApplicantRegister = async (userId: string, userName: string | undefined) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session_registrations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          user_id: userId,
+          role: 'student',
+        }),
+      });
+
+      if (response.ok) {        
+        setApplicants(applicants.filter(user => user.user_id !== userId));
+        setStudents([...students, { user_id: userId, name: userName }]);
+      } else {
+        console.error('Failed to register applicant as student');
+      }
+    } catch (error) {
+      console.error('Error registering applicant:', error);
+    }
+  };
+
+  const handleApplicantDecline = async (userId: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session_registrations`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session_id: sessionId,
+          user_id: userId,
+          role: 'applicant',
+        }),
+      });
+
+      if (response.ok) {
+        setApplicants(applicants.filter(user => user.user_id !== userId));
+      } else {
+        console.error('Failed to decline applicant');
+      }
+    } catch (error) {
+      console.error('Error declining applicant:', error);
+    }
+  };
+
+const renderUserList = (title: string, users: User[], displayOptions: boolean) => (
+  <div className="mt-6">
+    <h2 className="text-lg font-semibold mb-2">{title}</h2>
+    <div className="flex flex-col gap-2">
+      {users.map(user => (
+        <div key={user.user_id} className="flex items-center justify-between gap-3 p-2 border rounded">
+          {/* Left: user info */}
+          <div className="flex items-center gap-3">
+            {user.pic_link && (
+              <img
+                src={user.pic_link}
+                alt={user.name || 'User'}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <span>{user.name || user.user_id}</span>
+          </div>
+
+          {/* Right: buttons */}
+          {displayOptions && (
+            <div className="flex gap-2">
+              <button
+                className="flex items-center gap-1 border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-50 transition"
+                onClick={() => handleApplicantRegister(user.user_id, user.name)}
+              >
+                <CheckCircle className="w-4 h-4" />
+                Accept
+              </button>
+
+              <button
+                className="flex items-center gap-1 border border-red-600 text-red-600 px-2 py-1 rounded hover:bg-red-50 transition"
+                onClick={() => handleApplicantDecline(user.user_id)}
+              >
+                <XCircle className="w-4 h-4" />
+                Decline
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-6">
@@ -115,18 +185,19 @@ export default function EditSessionPage() {
       </div>
 
       <h2 className="text-xl font-semibold mb-2">{t('instructors')}</h2>
-      <div className="flex items-center justify-between gap-4">
-        <UserSearchSelector
-          allUsers={allUsers}
-          onSelect={(users) => setSelectedUsers(users)}
-          initialSelected={selectedUsers}
-        />
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition shrink-0"
-        >
-          {t('save')}
-        </button>
+      <div className="flex flex-col gap-2 border border-gray-300 rounded p-4">
+        {selectedUsers.map((user) => (
+          <div key={user.user_id} className="flex items-center gap-3">
+            {user.pic_link && (
+              <img
+                src={user.pic_link}
+                alt={user.name || 'Instructor'}
+                className="w-8 h-8 rounded-full"
+              />
+            )}
+            <span>{user.name || user.email}</span>
+          </div>
+        ))}
       </div>
 
       <div className="grid gap-4 mt-8">
@@ -138,7 +209,7 @@ export default function EditSessionPage() {
           return (
             <div
               key={period.id}
-              onClick={() => router.push(`/session_periods/edit?period_id=${period.id}&courseName=${courseName}`)}
+              onClick={() => router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)}
               className={`cursor-pointer flex justify-between items-center border rounded p-4 shadow transition relative
                 ${isCurrent
                   ? 'border-2 border-black bg-white'
@@ -164,14 +235,8 @@ export default function EditSessionPage() {
         })}
       </div>
 
-      <div className="mt-6 border border-red-500 border-dashed p-4 rounded">
-        <button
-          onClick={handleDelete}
-          className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-        >
-          {t('delete')}
-        </button>
-      </div>
+      {renderUserList('Applicants', applicants, true)}
+      {renderUserList('Students', students, false)}
     </div>
   );
 }
