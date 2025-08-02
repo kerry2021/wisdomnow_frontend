@@ -16,13 +16,12 @@ type Role = 'student' | 'instructor' | 'visitor';
 
 const navItemsByRole: Record<Role, NavItem[]> = {
   student: [
-    { name: 'dashboard', href: '/dashboard' },
+    { name: 'dashboard', href: '/dashboard/studentView' },
     { name: 'discover', href: '/courses/studentView' },
     { name: 'profile', href: '/profile' },
   ],
   instructor: [
-    { name: 'instructorDashboard', href: '/instructor/dashboard' },
-    { name: 'manageStudents', href: '/instructor/students' },
+    { name: 'instructorDashboard', href: '/dashboard/instructorView' },    
     { name: 'manageCourses', href: '/courses/instructorView' },
     { name: 'profile', href: '/profile' },
   ],
