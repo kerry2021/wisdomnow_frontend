@@ -92,6 +92,7 @@ export default function StudentCoursesPage() {
 
   const handleEnroll = async (sessionId: number) => {
     try {
+      console.log(session?.user)
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session_registrations`, {
         method: 'POST',
         headers: {
@@ -103,9 +104,12 @@ export default function StudentCoursesPage() {
       if (!res.ok) throw new Error('Failed to register');
 
       console.log(`Successfully enrolled in session ${sessionId}`);
-      // Optionally, display a toast or update UI
+      // show a success message:
+      alert(t('enrollmentSuccess'));
+
     } catch (err) {
       console.error('Enrollment error:', err);
+      alert(t('enrollmentError'));
     }
   };
 

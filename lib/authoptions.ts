@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         });
         const data: UserProfileResponse = await res.json();
         token.id = data.profile.user_id;
+        token.user_id = data.profile.user_id;
         if (data?.profile?.access_type) {
           token.access_type = data.profile.access_type;
         } else {

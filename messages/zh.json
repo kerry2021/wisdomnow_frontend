@@ -78,6 +78,8 @@
     "period_label_placeholder": "周、月等",
     "assign_instructors": "请选择带课师父",
     "create_button": "创建新一期课程",
-    "language": "语言"
+    "language": "语言",
+    "enrollmentSuccess": "成功申请加入本期课程！任课师傅会尽快做出录取决定",
+    "enrollmentError": "申请加入本期课程失败，请稍后再试"
   }
 }

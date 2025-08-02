@@ -78,7 +78,9 @@
     "period_label_placeholder": "Week, Month, etc.",
     "assign_instructors": "Assign Instructors",
     "create_button": "Create Session",
-    "language": "Language"
+    "language": "Language",
+    "enrollmentSuccess": "Successfully applied to the session! The instructors will make a decision soon.",
+    "enrollmentError": "Failed to apply to the session. Please try again later."
 
   }
 
