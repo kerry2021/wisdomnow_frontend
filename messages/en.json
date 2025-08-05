@@ -36,7 +36,9 @@
   "Courses":{
     "previous": "Previous",
     "next": "Next",
+    "to": "to",
     "allCourses": "All Courses",
+    "myCourses": "My Courses",
     "page": "Page",
     "createNewCourse": "Create New Course",
     "startDate": "Start Date",

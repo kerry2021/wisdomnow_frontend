@@ -45,7 +45,7 @@ export default function LoginPage() {
     });
 
     if (res?.ok) {
-      window.location.replace('/dashboard');
+      window.location.replace('/');
     } else {
       setError('Invalid credentials');
     }

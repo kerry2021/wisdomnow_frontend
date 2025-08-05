@@ -36,7 +36,9 @@
   "Courses": {
     "previous": "上一页",
     "next": "下一页",
+    "to": "至",
     "allCourses": "所有课程",
+    "myCourses": "我的课程",
     "page": "",
     "createNewCourse": "创建新课程",
     "startDate": "开始日期",
