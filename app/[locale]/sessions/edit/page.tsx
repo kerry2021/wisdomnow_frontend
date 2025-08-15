@@ -51,7 +51,9 @@ export default function ViewSessionPage() {
         setStartDate(data.start_date);
         setEndDate(data.end_date);
         setSelectedUsers(data.instructors);
-        setSessionPeriods(data.periods);
+                setSessionPeriods(
+          data.periods.sort((a: SessionPeriod, b: SessionPeriod) => Number(a.id) - Number(b.id))
+        );
         setPeriodLabel(data.period_label);
         console.log('Fetched session data:', data);
       })

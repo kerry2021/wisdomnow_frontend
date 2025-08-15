@@ -116,24 +116,24 @@ export default function LoginPage() {
 
           <div className="flex space-x-2 mt-2">
             {mode !== 'login' && (
-              <button onClick={() => { setMode('login'); setError(''); setMessage(''); }} className="hover:underline">
+              <button onClick={() => { setMode('login'); setError(''); setMessage(''); }} className="hover:underline text-blue-600 underline rounded cursor-pointer">
                 {t('backToLogin')}
               </button>
             )}
           
             {mode !== 'signup' && (
-              <button onClick={() => { setMode('signup'); setError(''); setMessage(''); }} className="hover:underline">
+              <button onClick={() => { setMode('signup'); setError(''); setMessage(''); }} className="hover:underline text-blue-600 underline rounded cursor-pointer">
                 {t('createAccount')}
               </button>
             )}
             
             {mode !== 'reset' && (
-              <button onClick={() => { setMode('reset'); setError(''); setMessage(''); }} className="hover:underline">
+              <button onClick={() => { setMode('reset'); setError(''); setMessage(''); }} className="hover:underline text-blue-600 underline rounded cursor-pointer">
                 {t('forgotPassword')}
               </button>
             )}
-          </div>
-
+          </div>          
+          {/*
           <p className="mt-4">{t('or')}</p>
           <button
             className="rounded bg-blue-600 px-4 py-2 text-white"
@@ -141,6 +141,8 @@ export default function LoginPage() {
           >
             {t('google')}
           </button>
+          */}
+          
         </>
       ) : (
         <p>{t('processing')}</p>
