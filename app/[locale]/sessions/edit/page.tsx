@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { CheckCircle, XCircle } from "lucide-react";
+import UserSearchSelector from '@/components/userSearchSelector';
 
 interface User {
   user_id: string;
@@ -19,7 +20,7 @@ interface SessionPeriod {
   end_date: string;
 }
 
-export default function ViewSessionPage() {
+export default function EditSessionPage() {
   const { data: session } = useSession();
   const t = useTranslations('session');
   const searchParams = useSearchParams();
@@ -34,6 +35,7 @@ export default function ViewSessionPage() {
   const [periodLabel, setPeriodLabel] = useState('');
   const [applicants, setApplicants] = useState<User[]>([]);
   const [students, setStudents] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (!session || session.user?.access_type != 'instructor') {
@@ -82,6 +84,29 @@ export default function ViewSessionPage() {
     fetchUsers('applicant', setApplicants);
     fetchUsers('student', setStudents);
   }, [sessionId]);
+
+   useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users?access_type=all`)
+      .then(res => res.json())
+      .then(data => setAllUsers(data || []))
+      .catch(err => console.error('Failed to fetch users', err));
+  }, []);
+
+  const handleSubmit = () => {
+    const instructorIds = selectedUsers.map(user => user.user_id);
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId,
+        instructorIds
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Session updated:', data);
+      });
+  };
 
   const today = new Date();
 
@@ -187,19 +212,18 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
       </div>
 
       <h2 className="text-xl font-semibold mb-2">{t('instructors')}</h2>
-      <div className="flex flex-col gap-2 border border-gray-300 rounded p-4">
-        {selectedUsers.map((user) => (
-          <div key={user.user_id} className="flex items-center gap-3">
-            {user.pic_link && (
-              <img
-                src={user.pic_link}
-                alt={user.name || 'Instructor'}
-                className="w-8 h-8 rounded-full"
-              />
-            )}
-            <span>{user.name || user.email}</span>
-          </div>
-        ))}
+      <div className="flex items-center justify-between gap-4">
+        <UserSearchSelector
+          allUsers={allUsers}
+          onSelect={(users) => setSelectedUsers(users)}
+          initialSelected={selectedUsers}
+        />
+        <button
+          onClick={handleSubmit}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition shrink-0"
+        >
+          {t('save')}
+        </button>
       </div>
 
       <div className="grid gap-4 mt-8">
@@ -211,7 +235,7 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
           return (
             <div
               key={period.id}
-              onClick={() => router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)}
+              onClick={() => router.push(`/session_periods/edit?period_id=${period.id}&courseName=${courseName}`)}
               className={`cursor-pointer flex justify-between items-center border rounded p-4 shadow transition relative
                 ${isCurrent
                   ? 'border-2 border-black bg-white'

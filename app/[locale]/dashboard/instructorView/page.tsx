@@ -80,7 +80,7 @@ export default function InstructorDashboard() {
               title={`${course.course_title}`}
               subtitle={`${session.start_date} ${t("to")} ${session.end_date}`}
               imageUrl={course.pic_link || '/placeholder.png'}
-              linkTo={`/sessions/view?sessionId=${session.id}&courseName=${course.course_title}`}
+              linkTo={`/sessions/edit?sessionId=${session.id}&courseName=${course.course_title}`}
             ></ContentCard>
           ))
         ))}
