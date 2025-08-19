@@ -32,7 +32,15 @@ export default function LoginPage() {
           if (!res.ok) throw new Error('Registration failed');
           return res.json();
         })
-        .then(() => router.replace('/dashboard'))
+        .then(() => {
+          if(session.user?.access_type === 'instructor'){
+            router.push('/dashboard/instructorView');
+          }
+          else{
+            router.push('/dashboard/studentView');
+          }
+        })
+        
         .catch((err) => console.error('User registration error:', err));
     }
   }, [status]);
