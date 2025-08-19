@@ -34,7 +34,7 @@ export default function ViewSessionPeriodPage() {
         {courseName} — {startDate} to {endDate}
       </h1>
 
-      <div className="p-4 border rounded min-h-[500px] overflow-auto prose whitespace-pre-wrap">
+      <div className="p-4 border rounded min-h-[500px] overflow-auto prose whitespace-pre-wrap max-w-3xl mx-auto">
         <CustomMarkdown>
           {markdownText}
         </CustomMarkdown>

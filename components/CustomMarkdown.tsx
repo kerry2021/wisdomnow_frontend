@@ -66,14 +66,13 @@ function renderLesson(tokens: Token[]) {
         return <p key={idx}>{renderInline(token.content)}</p>;
       case 'video':
         return (
-          <iframe
-            key={idx}
-            src={token.url}
-            width="560"
-            height="315"
-            allowFullScreen
-            style={{ margin: '1em 0' }}
-          />
+          <div key={idx} className="relative w-full pb-[56.25%] my-4">
+            <iframe
+              src={token.url}
+              className="absolute top-0 left-0 w-full h-full border-0"
+              allowFullScreen
+            />
+          </div>
         );
       case 'newline':
         return <br key={idx} />;
