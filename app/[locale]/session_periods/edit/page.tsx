@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import CustomMarkdown from '@/components/CustomMarkdown';
+
 
 export default function EditSessionPeriodPage() {
   const searchParams = useSearchParams();
@@ -13,8 +13,8 @@ export default function EditSessionPeriodPage() {
   const courseName = searchParams.get('courseName');
 
   const [markdownText, setMarkdownText] = useState('');
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -62,7 +62,9 @@ export default function EditSessionPeriodPage() {
         <div>
           <h2 className="text-xl font-semibold mb-2">Preview</h2>
           <div className="p-4 border rounded h-[500px] overflow-auto prose whitespace-pre-wrap">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownText}</ReactMarkdown>
+            <CustomMarkdown>
+              {markdownText}
+            </CustomMarkdown>
           </div>
         </div>
       </div>
@@ -73,4 +75,3 @@ export default function EditSessionPeriodPage() {
     </div>
   );
 }
- 
