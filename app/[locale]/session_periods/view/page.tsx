@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import CustomMarkdown from '@/components/CustomMarkdown';
 
 export default function ViewSessionPeriodPage() {
   const searchParams = useSearchParams();
@@ -36,31 +35,9 @@ export default function ViewSessionPeriodPage() {
       </h1>
 
       <div className="p-4 border rounded min-h-[500px] overflow-auto prose whitespace-pre-wrap">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            a: ({ href, children, title }) => {
-              const labelMatch = title?.match(/^label:(.+)$/);
-              const label = labelMatch ? labelMatch[1] : href;
-
-              const handleClick = () => {
-                fetch('/api/track_link_click', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ href, label }),
-                });
-              };
-
-              return (
-                <a href={href} title={title} onClick={handleClick} target="_blank" rel="noopener noreferrer">
-                  {children}
-                </a>
-              );
-            },
-          }}
-        >
+        <CustomMarkdown>
           {markdownText}
-        </ReactMarkdown>
+        </CustomMarkdown>
       </div>
     </div>
   );
