@@ -83,7 +83,11 @@
     "period_label_placeholder": "Week, Month, etc.",
     "assign_instructors": "Assign Instructors",
     "create_button": "Create Session",
-    "language": "Language"
+    "language": "Language",
+    "applicants": "Applicants",
+    "students": "Students",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 
 }

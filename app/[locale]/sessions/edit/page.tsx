@@ -185,7 +185,7 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
                 onClick={() => handleApplicantRegister(user.user_id, user.name)}
               >
                 <CheckCircle className="w-4 h-4" />
-                Accept
+                {t('accept')}
               </button>
 
               <button
@@ -193,7 +193,7 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
                 onClick={() => handleApplicantDecline(user.user_id)}
               >
                 <XCircle className="w-4 h-4" />
-                Decline
+                {t('decline')}
               </button>
             </div>
           )}
@@ -261,8 +261,8 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
         })}
       </div>
 
-      {renderUserList('Applicants', applicants, true)}
-      {renderUserList('Students', students, false)}
+      {renderUserList(t('applicants'), applicants, true)}
+      {renderUserList(t('students'), students, false)}
     </div>
   );
 }

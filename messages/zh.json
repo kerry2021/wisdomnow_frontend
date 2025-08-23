@@ -82,6 +82,10 @@
     "period_label_placeholder": "周、月等",
     "assign_instructors": "请选择带课师父",
     "create_button": "创建新一期课程",
-    "language": "语言"
+    "language": "语言",
+    "applicants": "申请列表",
+    "students": "学生列表",
+    "accept": "接受",
+    "decline": "拒绝"
   }
 }
