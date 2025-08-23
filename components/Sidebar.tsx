@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, redirect} from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
@@ -32,14 +32,20 @@ const navItemsByRole: Record<Role, NavItem[]> = {
 };
 
 export default function Sidebar() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations('Sidebar');
 
   const rawRole = session?.user?.access_type;
   const role: Role = rawRole === 'student' || rawRole === 'instructor' ? rawRole : 'visitor';
   const navItems = navItemsByRole[role] || navItemsByRole.visitor;
+
+  // --- Detect current locale and build the toggle path ---
+  const isChinese = pathname.startsWith('/zh');
+  const targetLocale = isChinese ? 'en' : 'zh';
+  const newPath = `/${targetLocale}${pathname.replace(/^\/(en|zh)/, '')}`;
 
   return (
     <div className="md:flex">
@@ -58,6 +64,7 @@ export default function Sidebar() {
         }`}
       >
         <nav className="space-y-4">
+          {/* Nav links */}
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -69,6 +76,8 @@ export default function Sidebar() {
               {t(item.name)}
             </Link>
           ))}
+
+          {/* Logout button */}
           {role !== 'visitor' && (
             <button
               onClick={() => signOut({ callbackUrl: '/login' })}
@@ -77,6 +86,14 @@ export default function Sidebar() {
               {t('logout')}
             </button>
           )}
+
+          {/* Language switch button */}
+          <button
+            onClick={() => {redirect(newPath);}}
+            className="block w-full text-left px-2 py-1 rounded hover:bg-gray-700 mt-4"
+          >
+            {isChinese ? 'English' : '中文'}
+          </button>
         </nav>
       </aside>
     </div>
