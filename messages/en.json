@@ -88,6 +88,10 @@
     "students": "Students",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "session_period": {
+    "next_page": "Next Page",
+    "previous_page": "Previous Page"
   }
 
 }

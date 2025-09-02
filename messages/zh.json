@@ -87,5 +87,9 @@
     "students": "学生列表",
     "accept": "接受",
     "decline": "拒绝"
+  },
+  "session_period": {
+    "next_page": "下一页",
+    "previous_page": "上一页"
   }
 }

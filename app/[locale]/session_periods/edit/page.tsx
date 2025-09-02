@@ -13,6 +13,8 @@ export default function EditSessionPeriodPage() {
   const courseName = searchParams.get('courseName');
 
   const [markdownText, setMarkdownText] = useState('');
+  const [pageTexts, setpageTexts] = useState<string[]>([]);
+  const [pageIndex, setPageIndex] = useState(0);
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,8 +27,11 @@ export default function EditSessionPeriodPage() {
       setStartDate(data.startDate);
       setEndDate(data.endDate);
       setIsLoading(false);
+
+      setpageTexts(data.markdownText.split('---'));
     }
     if (periodId) fetchPeriodData();
+
   }, [periodId]);
 
   async function handleSave() {
@@ -36,6 +41,7 @@ export default function EditSessionPeriodPage() {
       body: JSON.stringify({
         sessionPeriodId: periodId,
         markdownText,
+        totalPages: pageTexts.length,
       }),
     });
     alert('Saved successfully!');
@@ -54,7 +60,10 @@ export default function EditSessionPeriodPage() {
           <h2 className="text-xl font-semibold mb-2">Edit Content</h2>
           <Textarea
             value={markdownText}
-            onChange={(e) => setMarkdownText(e.target.value)}
+            onChange={(e) => {
+              setMarkdownText(e.target.value)
+              setpageTexts(e.target.value.split('---\n'));
+            }}            
             className="h-[500px]"
           />
         </div>
@@ -63,8 +72,27 @@ export default function EditSessionPeriodPage() {
           <h2 className="text-xl font-semibold mb-2">Preview</h2>
           <div className="p-4 border rounded h-[500px] overflow-auto prose whitespace-pre-wrap">
             <CustomMarkdown>
-              {markdownText}
+              {pageTexts[pageIndex] || ''}
             </CustomMarkdown>
+            <div className="flex justify-between mt-4">
+              {pageIndex > 0 ? (
+              <Button
+                onClick={() => setPageIndex(pageIndex - 1)}
+                className="mr-2"
+              >
+                Previous Page
+              </Button>
+              ) : <div />}
+              {pageIndex < pageTexts.length - 1 ? (
+              <Button
+                onClick={() => setPageIndex(pageIndex + 1)}
+                className="ml-2"
+              >
+                Next Page
+              </Button>
+              ) : <div />}
+            </div>
+
           </div>
         </div>
       </div>
