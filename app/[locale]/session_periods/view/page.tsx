@@ -5,12 +5,14 @@ import { useSearchParams } from 'next/navigation';
 import CustomMarkdown from '@/components/CustomMarkdown';
 import ProgressBar from '@/components/ProgressBar';
 import { useTranslations } from 'next-intl';
+import { useSession } from 'next-auth/react';
 
 export default function ViewSessionPeriodPage() {
   const t = useTranslations('session_period');
   const searchParams = useSearchParams();
   const periodId = searchParams.get('period_id');
   const courseName = searchParams.get('courseName');
+  const { data: session, status } = useSession();
 
   const [pageTexts, setpageTexts] = useState<string[]>([]);
   const [pageIndex, setPageIndex] = useState(0);
@@ -18,6 +20,16 @@ export default function ViewSessionPeriodPage() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  function handleProgressUpdate() {
+    const data = {
+      "userId": session?.user?.user_id,
+      "sessionPeriodId": periodId,
+      "progress": maxPageIndex + 1
+    }
+    navigator.sendBeacon(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/student_session_period`, JSON.stringify(data));
+  }
+  
 
   useEffect(() => {
     async function fetchPeriodData() {
@@ -31,6 +43,13 @@ export default function ViewSessionPeriodPage() {
     }
     if (periodId) fetchPeriodData();
   }, [periodId]);
+
+  useEffect(() => {  
+  if(status === 'authenticated' && session?.user) {
+    console.log("Max page index updated:", maxPageIndex);
+    handleProgressUpdate();
+  }
+}, [maxPageIndex, session?.user]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -72,10 +91,14 @@ export default function ViewSessionPeriodPage() {
           <button
             onClick={() => {
               if (pageIndex < pageTexts.length - 1) {
-                setPageIndex(pageIndex + 1);
-                if (pageIndex + 1 > maxPageIndex) {
-                  setMaxPageIndex(pageIndex + 1);
-                }
+                // Update page index
+                setPageIndex(prev => prev + 1);
+
+                // Update max page visited
+                setMaxPageIndex(prev => {
+                  const newMax = Math.max(prev, pageIndex + 1);
+                  return newMax;
+                });
               }
             }}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
