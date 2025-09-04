@@ -87,7 +87,9 @@
     "applicants": "Applicants",
     "students": "Students",
     "accept": "Accept",
-    "decline": "Decline"
+    "decline": "Decline",
+    "progress": "Learning Progress",
+    "loading_student": "Loading student progress..."
   },
   "session_period": {
     "next_page": "Next Page",

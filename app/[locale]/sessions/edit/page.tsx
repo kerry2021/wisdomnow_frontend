@@ -159,7 +159,7 @@ export default function EditSessionPage() {
     }
   };
 
-const renderUserList = (title: string, users: User[], displayOptions: boolean) => (
+const renderUserList = (title: string, users: User[], isApplicant: boolean) => (
   <div className="mt-6">
     <h2 className="text-lg font-semibold mb-2">{title}</h2>
     <div className="flex flex-col gap-2">
@@ -178,7 +178,7 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
           </div>
 
           {/* Right: buttons */}
-          {displayOptions && (
+          {isApplicant ? (
             <div className="flex gap-2">
               <button
                 className="flex items-center gap-1 border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-50 transition"
@@ -194,6 +194,17 @@ const renderUserList = (title: string, users: User[], displayOptions: boolean) =
               >
                 <XCircle className="w-4 h-4" />
                 {t('decline')}
+              </button>
+            </div>
+          )        
+          : (
+            <div className="flex gap-2">
+              <button
+                className="flex items-center gap-1 border border-green-600 text-green-600 px-2 py-1 rounded hover:bg-green-50 transition"
+                onClick={() => router.push(`/sessions/studentStatus?userId=${user.user_id}&sessionId=${sessionId}`)}
+              >
+                <CheckCircle className="w-4 h-4" />
+                {t('progress')}
               </button>
             </div>
           )}

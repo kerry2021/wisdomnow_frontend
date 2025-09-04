@@ -36,13 +36,6 @@ export default function ViewSessionPage() {
   const [periodLabel, setPeriodLabel] = useState('');
 
   useEffect(() => {
-    if (!session) {
-      router.push('/unauthorized');
-      return;
-    }
-  }, [session, router]);
-
-  useEffect(() => {
     if (!sessionId || !session?.user?.user_id) return;
 
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions?sessionId=${sessionId}&userId=${session?.user?.user_id}`)
@@ -80,84 +73,96 @@ export default function ViewSessionPage() {
       alert(t('registration_failed'));
     }
   };
-
-  return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">
-          {courseName} {startDate} - {endDate}
-        </h1>
-
+  if (!session) {
+    return (
+      <div className="p-6 max-w-2xl mx-auto space-y-6">
+        <div className="text-center">
+          <p className="text-xl">Please login to view</p>
+          <a href="/login" className="text-blue-500 hover:underline text-lg">Login</a>
+        </div>
       </div>
+    );
+  }
 
-      <h2 className="text-xl font-semibold mb-2">{t('instructors')}</h2>
-      <div className="flex flex-col gap-2">
-        {selectedUsers.map((user) => (
-          <div key={user.user_id} className="flex items-center gap-3 border border-gray-300 rounded p-2 shadow-sm">
-            {user.pic_link && (
-              <img
-                src={user.pic_link}
-                alt={user.name || 'Instructor'}
-                className="w-8 h-8 rounded-full"
-              />
-            )}
-            <span>{user.name || user.email}</span>
-          </div>
-        ))}
-      </div>
+  else{      
+    return (
+      <div className="p-6 max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">
+            {courseName} {startDate} - {endDate}
+          </h1>
 
-      <div className="grid gap-4 mt-8">
-        {sessionPeriods.map((period, index) => {
-          const start = new Date(period.start_date);
-          const end = new Date(period.end_date);
-          const isCurrent = start <= today && today <= end;
+        </div>
 
-          return (
-            <div
-              key={period.id}
-              onClick={() =>
-                router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)
-              }
-              className={`cursor-pointer border rounded p-4 shadow transition relative
-                ${isCurrent
-                  ? 'border-2 border-black bg-white'
-                  : 'border border-gray-300 bg-white hover:shadow-md hover:border-gray-400 hover:bg-gray-50'}
-              `}
-            >
-              {/* Top row: label + dates + arrow */}
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-lg font-semibold flex items-center gap-2">
-                    {periodLabel} {index + 1}
+        <h2 className="text-xl font-semibold mb-2">{t('instructors')}</h2>
+        <div className="flex flex-col gap-2">
+          {selectedUsers.map((user) => (
+            <div key={user.user_id} className="flex items-center gap-3 border border-gray-300 rounded p-2 shadow-sm">
+              {user.pic_link && (
+                <img
+                  src={user.pic_link}
+                  alt={user.name || 'Instructor'}
+                  className="w-8 h-8 rounded-full"
+                />
+              )}
+              <span>{user.name || user.email}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 mt-8">
+          {sessionPeriods.map((period, index) => {
+            const start = new Date(period.start_date);
+            const end = new Date(period.end_date);
+            const isCurrent = start <= today && today <= end;
+
+            return (
+              <div
+                key={period.id}
+                onClick={() =>
+                  router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)
+                }
+                className={`cursor-pointer border rounded p-4 shadow transition relative
+                  ${isCurrent
+                    ? 'border-2 border-black bg-white'
+                    : 'border border-gray-300 bg-white hover:shadow-md hover:border-gray-400 hover:bg-gray-50'}
+                `}
+              >
+                {/* Top row: label + dates + arrow */}
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-lg font-semibold flex items-center gap-2">
+                      {periodLabel} {index + 1}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {period.start_date} - {period.end_date}
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-600">
-                    {period.start_date} - {period.end_date}
-                  </div>
+                  <div className="text-gray-400 text-xl font-bold">&gt;</div>
                 </div>
-                <div className="text-gray-400 text-xl font-bold">&gt;</div>
+
+                {/* Progress bar as a footer */}
+                {period.progress !== undefined && period.total_pages !== undefined && (
+                  <div className="mt-3">
+                    <ProgressBar
+                      totalProgress={period.total_pages}
+                      currentProgress={period.progress}
+                    />
+                  </div>
+                )}
+
+                {isCurrent && (
+                  <div className="absolute top-2 right-2 text-xs font-medium text-black">
+                    ({t('current_week')})
+                  </div>
+                )}
               </div>
 
-              {/* Progress bar as a footer */}
-              {period.progress !== undefined && period.total_pages !== undefined && (
-                <div className="mt-3">
-                  <ProgressBar
-                    totalProgress={period.total_pages}
-                    currentProgress={period.progress}
-                  />
-                </div>
-              )}
+            );
 
-              {isCurrent && (
-                <div className="absolute top-2 right-2 text-xs font-medium text-black">
-                  ({t('current_week')})
-                </div>
-              )}
-            </div>
-
-          );
-
-        })}
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
