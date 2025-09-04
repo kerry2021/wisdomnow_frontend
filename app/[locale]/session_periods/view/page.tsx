@@ -45,7 +45,7 @@ export default function ViewSessionPeriodPage() {
   }, [periodId]);
 
   useEffect(() => {  
-  if(status === 'authenticated' && session?.user) {
+  if(status === 'authenticated' && session?.user && maxPageIndex > 0) {
     console.log("Max page index updated:", maxPageIndex);
     handleProgressUpdate();
   }

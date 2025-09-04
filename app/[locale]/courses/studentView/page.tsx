@@ -27,8 +27,8 @@ export default function StudentCoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [startDate, setStartDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [language, setLanguage] = useState('');
   const [error, setError] = useState('');
   const [triggerFetch, setTriggerFetch] = useState(false);
