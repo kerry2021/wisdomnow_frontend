@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
+import ProgressBar from '@/components/ProgressBar';
 
 interface User {
   user_id: string;
@@ -16,6 +17,8 @@ interface SessionPeriod {
   id: string;
   start_date: string;
   end_date: string;
+  progress?: number;
+  total_pages?: number;
 }
 
 export default function ViewSessionPage() {
@@ -40,9 +43,9 @@ export default function ViewSessionPage() {
   }, [session, router]);
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId || !session?.user?.user_id) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions?sessionId=${sessionId}`)
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sessions?sessionId=${sessionId}&userId=${session?.user?.user_id}`)
       .then(res => res.json())
       .then(data => {
         setStartDate(data.start_date);
@@ -55,7 +58,7 @@ export default function ViewSessionPage() {
         console.log('Fetched session data:', data);
       })
       .catch(err => console.error('Failed to fetch session info', err));
-  }, [sessionId]);
+  }, [sessionId, session?.user]);
 
   const today = new Date();
 
@@ -84,14 +87,7 @@ export default function ViewSessionPage() {
         <h1 className="text-2xl font-bold">
           {courseName} {startDate} - {endDate}
         </h1>
-        {/* 
-            <button
-            onClick={handleRegister}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-            {t('register')}
-            </button>
-        */}
+
       </div>
 
       <h2 className="text-xl font-semibold mb-2">{t('instructors')}</h2>
@@ -119,29 +115,47 @@ export default function ViewSessionPage() {
           return (
             <div
               key={period.id}
-              onClick={() => router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)}
-              className={`cursor-pointer flex justify-between items-center border rounded p-4 shadow transition relative
+              onClick={() =>
+                router.push(`/session_periods/view?period_id=${period.id}&courseName=${courseName}`)
+              }
+              className={`cursor-pointer border rounded p-4 shadow transition relative
                 ${isCurrent
                   ? 'border-2 border-black bg-white'
                   : 'border border-gray-300 bg-white hover:shadow-md hover:border-gray-400 hover:bg-gray-50'}
               `}
             >
-              <div>
-                <div className="text-lg font-semibold flex items-center gap-2">
-                  {periodLabel} {index + 1}
+              {/* Top row: label + dates + arrow */}
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="text-lg font-semibold flex items-center gap-2">
+                    {periodLabel} {index + 1}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {period.start_date} - {period.end_date}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">
-                  {period.start_date} - {period.end_date}
-                </div>
+                <div className="text-gray-400 text-xl font-bold">&gt;</div>
               </div>
+
+              {/* Progress bar as a footer */}
+              {period.progress !== undefined && period.total_pages !== undefined && (
+                <div className="mt-3">
+                  <ProgressBar
+                    totalProgress={period.total_pages}
+                    currentProgress={period.progress}
+                  />
+                </div>
+              )}
+
               {isCurrent && (
                 <div className="absolute top-2 right-2 text-xs font-medium text-black">
                   ({t('current_week')})
                 </div>
               )}
-              <div className="text-gray-400 text-xl font-bold">&gt;</div>
             </div>
+
           );
+
         })}
       </div>
     </div>
