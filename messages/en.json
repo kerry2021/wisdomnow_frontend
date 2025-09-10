@@ -89,7 +89,8 @@
     "accept": "Accept",
     "decline": "Decline",
     "progress": "Learning Progress",
-    "loading_student": "Loading student progress..."
+    "loading_student": "Loading student progress...",
+    "instructor_notes": "Instructor Notes"
   },
   "session_period": {
     "next_page": "Next Page",

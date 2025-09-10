@@ -88,7 +88,8 @@
     "accept": "接受",
     "decline": "拒绝",
     "progress": "学习进度",
-    "loading_student": "正在加载学生的学习进度..."
+    "loading_student": "正在加载学生的学习进度...",
+    "instructor_notes": "学生备注"
   },
   "session_period": {
     "next_page": "下一页",
